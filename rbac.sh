@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# rbac_extract_sid.sh — Extract privileged access for UT% and %_HA accounts (RBAC discovery)
+# rbac_extract_sid.sh — Extract privileged access for accounts with %UT% or %HA in username
 # Outputs: rbac_privileges_<SID>_YYYYMMDD_HH24MISS.csv
 
 set -euo pipefail
@@ -24,11 +24,11 @@ SET HEADING OFF FEEDBACK OFF TERMOUT OFF PAGES 0 LINES 400 TRIMSPOOL ON
 PROMPT "Privilege Name","Username","Owner/Schema","Object Type","Object Name","Access","Granularity Level"
 
 WITH
--- Fixed filter for UT% and %_HA
+-- Fixed filter: %UT% or %HA anywhere in username
 users_of_interest AS (
   SELECT username
   FROM   dba_users
-  WHERE  username LIKE 'UT%' OR username LIKE '%\_HA' ESCAPE '\'
+  WHERE  username LIKE '%UT%' OR username LIKE '%HA'
 ),
 
 -- Recursive role expansion
